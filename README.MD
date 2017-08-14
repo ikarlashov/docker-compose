@@ -1,4 +1,4 @@
-========= DETAILS =========
+## DETAILS
 
 Nginx is built from Dockerfile.
 
@@ -20,15 +20,15 @@ PostgreSQL listens on localhost interface.
 
 Artifactory version could be set by environment variable. If variable isn't set or empty, default Artifactory version is set to 5.4.5.
 
-========= RUN COMMAND =========
+## RUN COMMAND
 
 $ ARTI_VERSION=5.4.5 docker-compose up -d
 
 
-========= STOP COMMAND =========
+## STOP COMMAND 
 
 docker-compose stop
 
-========= STOP & REMOVE CONTAINERS ==========
+## STOP & REMOVE CONTAINERS 
 
 docker-compose stop && docker-compose rm -v
