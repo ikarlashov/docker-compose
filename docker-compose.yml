@@ -1,0 +1,57 @@
+version: '2.1'
+services:
+  nginx: 
+    build: nginx 
+    depends_on: 
+       - artifactory
+    links: 
+       - artifactory
+    ports: 
+       - 80:80
+    volumes:
+     - /data/nginx:/var/log/nginx
+    restart: always 
+
+  postgresql:
+    image: docker.bintray.io/postgres:9.5.2
+    container_name: postgresql
+    ports:
+     - 127.0.0.1:5432:5432
+    environment:
+     - POSTGRES_DB=artifactory
+     # The following must match the DB_USER and DB_PASSWORD values passed to Artifactory
+     - POSTGRES_USER=artifactory
+     - POSTGRES_PASSWORD=PASSworD
+    volumes:   
+     - /data/postgresql:/var/lib/postgresql/data
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss:${ARTI_VERSION:-5.4.5}
+    container_name: artifactory
+    ports:
+     - 8081
+    depends_on:
+     - postgresql
+    links:
+     - postgresql
+    volumes:
+     - /data/artifactory:/var/opt/jfrog/artifactory
+    environment:
+     - DB_TYPE=postgresql
+     # The following must match the POSTGRES_USER and POSTGRES_PASSWORD values passed to PostgreSQL
+     - DB_USER=artifactory
+     - DB_PASSWORD=PASSworD
+     # Add extra Java options by uncommenting the following line
+     #- EXTRA_JAVA_OPTIONS=-Xmx4g
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
